@@ -1,10 +1,10 @@
 .weather {
     width: 300px;
     border-radius: 6px;
-    box-shadow: 10 px - 2px 20px 2px rgb(0, 0, 0 /30%);
+    box-shadow: 10px - 2px 20px 2px rgb(0, 0, 0 /30%);
     color: #fff;
     background-color: #333;
-    margin: 20px auto 0 auto;
+    margin: 20px auto 5px auto;
     padding: 0 20px 20px 20px;
 }
 
@@ -25,7 +25,7 @@
 .weather-description {
     font-weight: 400;
     font-size: 14px;
-    line-height: 1;
+    line-height: 2;
     margin: 0;
 }
 
