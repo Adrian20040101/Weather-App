@@ -1,0 +1,17 @@
+.favorite-locations {
+    font-size: 36px;
+    font-weight: 700;
+    position: relative;
+    margin-top: 100px;
+    text-align: left;
+    border-bottom: 3px solid black;
+}
+
+.recent-searches {
+    font-size: 36px;
+    font-weight: 700;
+    position: relative;
+    margin-top: 225px;
+    text-align: left;
+    border-bottom: 3px solid black;
+}

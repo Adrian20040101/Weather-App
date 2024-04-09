@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { url, geoApiOptions } from "../../api";
+import './search.css';
 
 const Search = ({onSearchChange}) => {
 
@@ -8,7 +9,7 @@ const Search = ({onSearchChange}) => {
 
     const loadOptions = async (input) => {
         return fetch (
-            `${url}/cities?minPopulation=1000000&namePrefix=${input}`,
+            `${url}/cities?minPopulation=0&namePrefix=${input}`,
             geoApiOptions
         )
         .then((response) => response.json())
@@ -31,13 +32,26 @@ const Search = ({onSearchChange}) => {
     }
 
     return (
-        <AsyncPaginate
-            placeholder="Search for city"
-            debounceTimeout={600}
-            value={search}
-            onChange={handleOnChange}
-            loadOptions={loadOptions}
-        />
+        <div>
+            <AsyncPaginate
+                placeholder="Search for a city..."
+                debounceTimeout={600}
+                value={search}
+                onChange={handleOnChange}
+                loadOptions={loadOptions}
+            />
+
+            {!search && (
+                <>
+                    <div className="favorite-locations">
+                        Favorites
+                    </div>
+                    <div className="recent-searches">
+                        Recent Searches
+                    </div>
+                </>
+            )}
+        </div>
     );
 }
 
