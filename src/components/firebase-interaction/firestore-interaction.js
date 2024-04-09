@@ -34,12 +34,12 @@ export const addToFavorites = async (userId, locationData) => {
 
 export const removeFromFavorites = async (userId, locationId) => {
     try {
-        const userFavoritesRef = collection(db, 'users', userId, 'favorites');
-        const locationDoc = doc(userFavoritesRef, locationId);
-        const locationSnapshot = await getDoc(locationDoc);
-        
-        if (locationSnapshot.exists()) {
-            await deleteDoc(locationDoc);
+        const favoriteRef = doc(db, 'users', userId, 'favorites', locationId);
+        const favoriteSnapshot = await getDoc(favoriteRef);
+
+        console.log(locationId);
+        if (favoriteSnapshot.exists()) {
+            await deleteDoc(favoriteRef);
             console.log('Location removed from favorites successfully');
         } else {
             console.log('Location not found in favorites');
@@ -48,3 +48,5 @@ export const removeFromFavorites = async (userId, locationId) => {
         console.error('Error removing location from favorites:', error);
     }
 };
+
+
