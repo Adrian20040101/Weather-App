@@ -12,6 +12,7 @@ function App() {
 
   const handleOnSearchChange = (data) => {
     const [lat, lon] = data.value.split(" ");
+
     const currentWeatherFetch = fetch(`${weatherUrl}/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`);
     const forecastWeatherFetch = fetch(`${weatherUrl}/forecast?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`);
 
@@ -19,6 +20,8 @@ function App() {
     .then(async (response) => {
       const currentWeatherResponse = await response[0].json();
       const forecastWeatherResponse = await response[1].json();
+
+      console.log(currentWeatherResponse);
 
       setCurrentWeather({city: data.label, ...currentWeatherResponse});
       setForecastWeather({city: data.label, ...forecastWeatherResponse});

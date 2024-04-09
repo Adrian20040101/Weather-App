@@ -2,13 +2,48 @@ import { useState } from "react";
 import "./current-weather.css";
 import { IconButton } from '@mui/material';
 import { StarBorder, Star } from '@mui/icons-material';
+import { addToFavorites, removeFromFavorites } from "../firebase-interaction/firestore-interaction";
+import { db } from "../../config/firebase-config";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 
 const CurrentWeather = ({ data }) => {
     const [isFavorite, setIsFavorite] = useState(false);
+    const mockUserId = 'Sndjs24hb3FH2kk33'
+    const [userId, setUserId] = useState(mockUserId);
+    const [locationId, setLocationId] = useState('');
 
-    const toggleFavorite = () => {
+    const fetchLocationId = async () => {
+        try {
+            const userFavoritesRef = collection(db, 'users', userId, 'favorites');
+            const locationQuery = query(userFavoritesRef, where('city', '==', data.city.split(",")[0]));
+            const querySnapshot = await getDocs(locationQuery);
+            
+            if (!querySnapshot.empty) {
+                const favoriteLocation = querySnapshot.docs[0];
+                setLocationId(favoriteLocation.data().locationId);
+                setIsFavorite(true);
+            }
+        } catch (error) {
+            console.error('Error fetching location id:', error);
+        }
+    };
+
+    const toggleFavorite = async () => {
       setIsFavorite(prev => !prev);
+      if (!isFavorite) {
+        const newLocationId = await addToFavorites(userId, {
+            city: data.city.split(",")[0],
+            country_code: data.city.split(",")[1],
+            latitude: data.coord.lat,
+            longitude: data.coord.lon
+        });
+        setLocationId(newLocationId);
+      } else {
+        if (locationId) {
+            removeFromFavorites(userId, locationId)
+        }
+      }
     };
 
     return (
