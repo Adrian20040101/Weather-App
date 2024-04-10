@@ -89,13 +89,14 @@ const Search = ({onSearchChange, userId}) => {
             {!search && (
                 <>
                     <div className="favorite-locations">
-                        Favorites
+                        Your Favorites
+                        <div className="favorite-locations-widgets">
                         {favoriteWeatherData.map(({ location, weatherData }) => (
-                            <div onClick={() => handleFavoriteWeatherClick(location.latitude, location.longitude, location.city, location.country_code)}>
+                            <div  onClick={() => handleFavoriteWeatherClick(location.latitude, location.longitude, location.city, location.country_code)}>
                                 <CurrentWeather data={{ ...weatherData, city: `${location.city},${location.country_code}` }} />
                             </div>
                         ))}
-
+                        </div>
                     </div>
 
                     { !userId && (

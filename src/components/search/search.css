@@ -2,16 +2,31 @@
     font-size: 36px;
     font-weight: 700;
     position: relative;
-    margin-top: 100px;
+    margin-top: 75px;
     text-align: left;
+}
+
+.location-header {
     border-bottom: 3px solid black;
+    padding-bottom: 5px;
+}
+
+.favorite-locations-widgets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 15px;
 }
 
 .recent-searches {
     font-size: 36px;
     font-weight: 700;
     position: relative;
-    margin-top: 225px;
+    margin-top: 50px;
     text-align: left;
+}
+
+.search-header {
     border-bottom: 3px solid black;
+    padding-bottom: 10px;
 }
