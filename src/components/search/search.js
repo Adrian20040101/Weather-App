@@ -69,6 +69,13 @@ const Search = ({onSearchChange, userId}) => {
         onSearchChange(data);
     }
 
+    const handleFavoriteWeatherClick = (latitude, longitude, city, countryCode) => {
+        const selectedOption = { value: `${latitude} ${longitude}`, label: `${city},${countryCode}` };
+        setSearch(selectedOption);
+        handleOnChange(selectedOption);
+    };
+    
+
     return (
         <div>
             <AsyncPaginate
@@ -84,8 +91,9 @@ const Search = ({onSearchChange, userId}) => {
                     <div className="favorite-locations">
                         Favorites
                         {favoriteWeatherData.map(({ location, weatherData }) => (
-                            console.log(location.city, location.country_code),
-                            <CurrentWeather data={{ ...weatherData, city: `${location.city},${location.country_code}` }} />
+                            <div onClick={() => handleFavoriteWeatherClick(location.latitude, location.longitude, location.city, location.country_code)}>
+                                <CurrentWeather data={{ ...weatherData, city: `${location.city},${location.country_code}` }} />
+                            </div>
                         ))}
 
                     </div>
