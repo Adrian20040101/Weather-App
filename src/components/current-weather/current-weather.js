@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./current-weather.css";
 import { IconButton } from '@mui/material';
 import { StarBorder, Star } from '@mui/icons-material';
-import { addToFavorites, removeFromFavorites } from "../firebase-interaction/firestore-interaction";
+import { addToFavorites, removeFromFavorites, getFavoritesByUserId, getLocationDataById } from "../firebase-interaction/firestore-interaction";
 import { db } from "../../config/firebase-config";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
@@ -13,21 +13,29 @@ const CurrentWeather = ({ data }) => {
     const [userId, setUserId] = useState(mockUserId);
     const [locationId, setLocationId] = useState('');
 
+    useEffect(() => {
+        fetchLocationId();
+    }, [data]);
+
     const fetchLocationId = async () => {
-        try {
-            const userFavoritesRef = collection(db, 'users', userId, 'favorites');
-            const locationQuery = query(userFavoritesRef, where('city', '==', data.city.split(",")[0]));
-            const querySnapshot = await getDocs(locationQuery);
-            
-            if (!querySnapshot.empty) {
-                const favoriteLocation = querySnapshot.docs[0];
-                setLocationId(favoriteLocation.data().locationId);
-                setIsFavorite(true);
-            }
-        } catch (error) {
-            console.error('Error fetching location id:', error);
+    try {
+        if (data.city) {
+            const favoriteLocationIds = await getFavoritesByUserId(userId);
+            const favoriteLocationsData = await getLocationDataById(favoriteLocationIds);
+            const isFavorite = favoriteLocationsData.some(favorite =>
+                favorite.city === data.city.split(",")[0] &&
+                favorite.country_code === data.city.split(",")[1]
+            );
+            console.log('Favorite Location IDs:', favoriteLocationIds);
+            console.log('Favorite Locations Data:', favoriteLocationsData);
+
+            setIsFavorite(isFavorite);
         }
-    };
+    } catch (error) {
+        console.error('Error fetching location id:', error);
+    }
+};
+
 
     const toggleFavorite = async () => {
       setIsFavorite(prev => !prev);
@@ -40,9 +48,11 @@ const CurrentWeather = ({ data }) => {
         });
         setLocationId(newLocationId);
       } else {
-        if (locationId) {
-            removeFromFavorites(userId, locationId)
-        }
+        await removeFromFavorites(userId, {
+            city: data.city.split(",")[0],
+            country_code: data.city.split(",")[1]
+        })
+
       }
     };
 

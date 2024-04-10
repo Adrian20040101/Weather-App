@@ -9,6 +9,8 @@ function App() {
 
   const [currentWeather, setCurrentWeather] = useState(null);
   const [forecastWeather, setForecastWeather] = useState(null);
+  const mockUserId = 'Sndjs24hb3FH2kk33'
+  const [userId, setUserId] = useState(mockUserId);
 
   const handleOnSearchChange = (data) => {
     const [lat, lon] = data.value.split(" ");
@@ -35,7 +37,7 @@ function App() {
 
   return (
     <div className="container">
-      <Search onSearchChange={handleOnSearchChange}/>
+      <Search onSearchChange={handleOnSearchChange} userId={userId}/>
       {currentWeather && <CurrentWeather data={currentWeather}/>}
       {forecastWeather && <Forecast data={forecastWeather}/>}
     </div>

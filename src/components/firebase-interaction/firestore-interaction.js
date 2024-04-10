@@ -9,10 +9,11 @@ export const addToFavorites = async (userId, locationData) => {
             where('city', '==', locationData.city),
             where('country_code', '==', locationData.country_code)
         );
+
         const querySnapshot = await getDocs(locationQuery);
-        
+
         let locationId;
-        
+
         if (querySnapshot.empty) {
             const newLocationRef = await addDoc(locationsRef, locationData);
             locationId = newLocationRef.id;
@@ -20,33 +21,99 @@ export const addToFavorites = async (userId, locationData) => {
             const existingLocation = querySnapshot.docs[0];
             locationId = existingLocation.id;
         }
-        
-        const userFavoritesRef = collection(db, 'users', userId, 'favorites');
-        await addDoc(userFavoritesRef, { locationId });
-        
+
+        const userFavoritesRef = collection(db, 'favorites');
+
+        await addDoc(userFavoritesRef, {
+            userId: userId,
+            locationId: locationId
+        });
+
         console.log('Location added to favorites successfully.');
-        return locationId;  // return the id to be able to process it in the remove method when calling it
+        return locationId;
     } catch (error) {
         console.error('Error adding location to favorites:', error);
+        throw error;
     }
 };
 
 
-export const removeFromFavorites = async (userId, locationId) => {
+
+export const getFavoritesByUserId = async (userId) => {
     try {
-        const favoriteRef = doc(db, 'users', userId, 'favorites', locationId);
-        const favoriteSnapshot = await getDoc(favoriteRef);
+        const favoritesRef = collection(db, 'favorites');
+        const userFavoritesQuery = query(favoritesRef, where('userId', '==', userId));
+        const favoritesSnapshot = await getDocs(userFavoritesQuery);
 
-        console.log(locationId);
-        if (favoriteSnapshot.exists()) {
-            await deleteDoc(favoriteRef);
-            console.log('Location removed from favorites successfully');
-        } else {
-            console.log('Location not found in favorites');
-        }
+        const favoriteLocationIds = [];
+        favoritesSnapshot.forEach(doc => {
+            favoriteLocationIds.push(doc.data().locationId);
+        });
+
+        return favoriteLocationIds;
     } catch (error) {
-        console.error('Error removing location from favorites:', error);
+        console.error('Error getting favorites by user ID:', error);
+        throw error;
     }
 };
+
+
+export const getLocationDataById = async (locationIds) => {
+    try {
+        const locationDataArray = [];
+
+        for (const locationId of locationIds) {
+            const locationDocRef = doc(db, 'locations', locationId)
+            const locationSnapshot = await getDoc(locationDocRef);
+            if (locationSnapshot.exists()) {
+                const locationData = locationSnapshot.data();
+                locationDataArray.push(locationData);
+            }
+        }
+
+        return locationDataArray;
+    } catch (error) {
+        console.error('Error fetching location data:', error);
+        throw error;
+    }
+};
+
+
+export const removeFromFavorites = async (userId, locationData) => {
+    try {
+      const locationsRef = collection(db, 'locations');
+      const locationQuerySnapshot = await getDocs(query(locationsRef, 
+        where('city', '==', locationData.city),
+        where('country_code', '==', locationData.country_code)
+      ));
+  
+      if (!locationQuerySnapshot.empty) {
+        const locationId = locationQuerySnapshot.docs[0].id;
+        const favoritesRef = collection(db, 'favorites');
+        const favoritesQuerySnapshot = await getDocs(query(favoritesRef, 
+          where('userId', '==', userId), 
+          where('locationId', '==', locationId)
+        ));
+        
+        console.log(locationId);
+  
+        if (!favoritesQuerySnapshot.empty) {
+          const favoriteDoc = favoritesQuerySnapshot.docs[0];
+          await deleteDoc(favoriteDoc.ref);
+          console.log('Location removed from favorites successfully');
+        } else {
+          console.log('Location not found in favorites');
+        }
+      } else {
+        console.log('Location not found in the locations collection');
+      }
+    } catch (error) {
+      console.error('Error removing location from favorites:', error);
+      throw error;
+    }
+  };
+  
+  
+
 
 
