@@ -104,8 +104,8 @@ export default function SignupPage() {
           />
           <Button variant="contained" className="submit-button" onClick={handleSignup}>Sign Up</Button>
         </Box>
-        {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
-        {!error && signupMessage && <p style={{ color: 'green', textAlign: 'center' }}>{signupMessage}</p>}
+        {error && <p style={{ color: 'red', textAlign: 'center', marginBottom: '50px' }}>{error}</p>}
+        {!error && signupMessage && <p style={{ color: 'green', textAlign: 'center', marginBottom: '50px' }}>{signupMessage}</p>}
         <p className="login-redirect">Already have an account? <Link to="/login">Login</Link></p>
       </div>
     </div>

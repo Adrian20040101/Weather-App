@@ -99,8 +99,8 @@ export default function LoginPage() {
                     <div className="google-button">
                         <GoogleIcon onClick={handleGoogleSignIn}/>
                     </div>
-                    {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
-                    {!error && loginMessage && <p style={{ color: 'green', textAlign: 'center' }}>{loginMessage}</p>}
+                    {error && <p style={{ color: 'red', textAlign: 'center', marginBottom: '50px' }}>{error}</p>}
+                    {!error && loginMessage && <p style={{ color: 'green', textAlign: 'center', marginBottom: '50px' }}>{loginMessage}</p>}
                     
                 </Box>
                 <p style={{ textAlign: 'center', marginTop: '30px', marginBottom: '-100px' }}>Don't have an account? <Link to="/signup">Register now</Link></p>
