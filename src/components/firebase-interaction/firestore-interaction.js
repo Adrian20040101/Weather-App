@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { db } from '../../config/firebase-config';
-import { collection, addDoc, deleteDoc, getDoc, doc, getDocs, query, where } from 'firebase/firestore';
+import { collection, addDoc, deleteDoc, getDoc, doc, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+
+
+// favorites interaction
+
 
 export const addToFavorites = async (userId, locationData) => {
     try {
@@ -94,8 +98,6 @@ export const removeFromFavorites = async (userId, locationData) => {
           where('userId', '==', userId), 
           where('locationId', '==', locationId)
         ));
-        
-        console.log(locationId);
   
         if (!favoritesQuerySnapshot.empty) {
           const favoriteDoc = favoritesQuerySnapshot.docs[0];
@@ -115,5 +117,74 @@ export const removeFromFavorites = async (userId, locationData) => {
   
   
 
+// recents interaction
 
+
+export const addRecentSearch = async (userId, locationData) => {
+    try {
+        const city = locationData.label.split(',')[0];
+        const country_code = locationData.label.split(',')[1];
+        const latitude = locationData.value.split(' ')[0];
+        const longitude = locationData.value.split(' ')[1];
+        const location = {
+            city: city,
+            country_code: country_code,
+            latitude: latitude,
+            longitude: longitude
+        };
+
+        console.log(location);
+        const locationsRef = collection(db, 'locations');
+        const locationQuery = query(locationsRef, 
+            where('city', '==', city),
+            where('country_code', '==', country_code)
+        );
+
+        const querySnapshot = await getDocs(locationQuery);
+
+        let locationId;
+
+        if (querySnapshot.empty) {
+            const newLocationRef = await addDoc(locationsRef, location);
+            locationId = newLocationRef.id;
+        } else {
+            const existingLocation = querySnapshot.docs[0];
+            locationId = existingLocation.id;
+        }
+
+        const userRecentsRef = collection(db, 'recents');
+
+        await addDoc(userRecentsRef, {
+            userId: userId,
+            locationId: locationId,
+            timestamp: new Date()
+        });
+
+        console.log('Location added to recents successfully.');
+        return locationId;
+    } catch (error) {
+        console.error('Error adding location to recents:', error);
+        throw error;
+    }
+  };
+  
+
+
+  export const getRecentsByUserId = async (userId) => {
+    try {
+        const recentsRef = collection(db, 'recents');
+        const userRecentsQuery = query(recentsRef, where('userId', '==', userId), orderBy('timestamp', 'desc'), limit(3));
+        const recentsSnapshot = await getDocs(userRecentsQuery);
+  
+        const recentSearchIds = [];
+        recentsSnapshot.forEach(doc => {
+            recentSearchIds.push(doc.data().locationId);
+        });
+  
+        return recentSearchIds;
+    } catch (error) {
+        console.error('Error getting recents by user ID:', error);
+        throw error;
+    }
+  };
 

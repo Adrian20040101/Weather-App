@@ -26,8 +26,6 @@ const CurrentWeather = ({ data }) => {
                 favorite.city === data.city.split(",")[0] &&
                 favorite.country_code === data.city.split(",")[1]
             );
-            console.log('Favorite Location IDs:', favoriteLocationIds);
-            console.log('Favorite Locations Data:', favoriteLocationsData);
 
             setIsFavorite(isFavorite);
         }

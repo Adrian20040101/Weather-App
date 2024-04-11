@@ -2,7 +2,7 @@
     font-size: 36px;
     font-weight: 700;
     position: relative;
-    margin-top: 75px;
+    margin-top: 25px;
     text-align: left;
 }
 
@@ -26,7 +26,21 @@
     text-align: left;
 }
 
+.recent-searches-widgets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 15px;
+}
+
 .search-header {
     border-bottom: 3px solid black;
     padding-bottom: 10px;
+}
+
+.subtitle-text {
+    font-size: 20px;
+    font-weight: 400;
+    text-align: left;
+    padding-left: 5px;
 }
