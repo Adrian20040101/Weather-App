@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { url, geoApiOptions } from "../../api";
 import './search.css';
 import CurrentWeather from "../current-weather/current-weather";
 import { getFavoritesByUserId, getLocationDataById, addRecentSearch, getRecentsByUserId } from "../firebase-interaction/firestore-interaction";
 import { fetchWeatherData } from "../../api";
+import { auth } from "../../config/firebase-config";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { signOut } from "firebase/auth";
 
 const Search = ({ onSearchChange, userId }) => {
     const [search, setSearch] = useState(null);
@@ -12,6 +17,7 @@ const Search = ({ onSearchChange, userId }) => {
     const [favoriteWeatherData, setFavoriteWeatherData] = useState([]);
     const [recents, setRecents] = useState([]);
     const [recentsData, setRecentsData] = useState([]);
+    const history = useHistory();
 
     useEffect(() => {
         if (userId) {
@@ -19,6 +25,19 @@ const Search = ({ onSearchChange, userId }) => {
             fetchRecents();
         }
     }, [userId]);
+
+    const handleLoginButtonClick = () => {
+        history.push('/login');
+    };
+
+    const handleLogoutButtonClick = async () => {
+        try {
+            await signOut(auth);
+            console.log('User logged out');
+          } catch (error) {
+            console.error('Error logging out:', error.message);
+          }
+    }
 
     const fetchFavoriteLocations = async () => {
         try {
@@ -74,7 +93,7 @@ const Search = ({ onSearchChange, userId }) => {
 
     const loadOptions = async (input) => {
         return fetch (
-            `${url}/cities?minPopulation=0&namePrefix=${input}`,
+            `${url}/cities?minPopulation=10000&namePrefix=${input}`,
             geoApiOptions
         )
         .then((response) => response.json())
@@ -107,13 +126,23 @@ const Search = ({ onSearchChange, userId }) => {
 
     return (
         <div>
-            <AsyncPaginate
-                placeholder="Search for a city..."
-                debounceTimeout={600}
-                value={search}
-                onChange={handleOnChange}
-                loadOptions={loadOptions}
-            />
+            <div className="search-bar-container">
+                <div className="search-bar">
+                <AsyncPaginate
+                    placeholder="Search for a city..."
+                    debounceTimeout={600}
+                    value={search}
+                    onChange={handleOnChange}
+                    loadOptions={loadOptions}
+                />
+                </div>
+                <div className="login-button">
+                    <AccountCircleIcon onClick={handleLoginButtonClick} style={{ fontSize: 40 }}></AccountCircleIcon>
+                </div>
+                <div className="logout-button">
+                    <LogoutIcon onClick={handleLogoutButtonClick} style={{ fontSize: 40}}></LogoutIcon>
+                </div>
+            </div>
 
             {!search && (
             <>
@@ -124,7 +153,7 @@ const Search = ({ onSearchChange, userId }) => {
                         {favoriteWeatherData.length > 0 ? (
                             favoriteWeatherData.map(({ location, weatherData }) => (
                                 <div onClick={() => handleFavoriteWeatherClick(location.latitude, location.longitude, location.city, location.country_code)}>
-                                    <CurrentWeather data={{ ...weatherData, city: `${location.city},${location.country_code}` }} />
+                                    <CurrentWeather data={{ ...weatherData, city: `${location.city},${location.country_code}` }} userId={userId}/>
                                 </div>
                             ))
                         ) : (
@@ -143,7 +172,7 @@ const Search = ({ onSearchChange, userId }) => {
                         {recentsData.length > 0 ? (
                             recentsData.map(({ recent, weatherData }) => (
                                 <div onClick={() => handleFavoriteWeatherClick(recent.latitude, recent.longitude, recent.city, recent.country_code)}>
-                                    <CurrentWeather data={{ ...weatherData, city: `${recent.city},${recent.country_code}` }} />
+                                    <CurrentWeather data={{ ...weatherData, city: `${recent.city},${recent.country_code}` }} userId={userId}/>
                                 </div>
                             ))
                         ) : (
@@ -154,7 +183,6 @@ const Search = ({ onSearchChange, userId }) => {
                     <p className="subtitle-text">Log in to see recent searches</p>
                 )}
             </div>
-
             </>
             )}
         </div>

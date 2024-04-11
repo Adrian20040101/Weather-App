@@ -2,15 +2,31 @@ import './App.css';
 import Search from './components/search/search';
 import CurrentWeather from './components/current-weather/current-weather';
 import { weatherUrl, weatherApiKey } from './api';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Forecast from './components/forecast/forecast-weather';
+import LoginPage from './components/authentication/login'
+import SignupPage from './components/authentication/signup';
+import { auth } from './config/firebase-config';
 
 function App() {
 
   const [currentWeather, setCurrentWeather] = useState(null);
   const [forecastWeather, setForecastWeather] = useState(null);
-  const mockUserId = 'Sndjs24hb3FH2kk33'
-  const [userId, setUserId] = useState(mockUserId);
+  const [user, setUser] = useState(null);
+
+
+  useEffect(() => {
+    const isLoggedIn = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => isLoggedIn();
+}, []);
 
   const handleOnSearchChange = (data) => {
     const [lat, lon] = data.value.split(" ");
@@ -36,11 +52,23 @@ function App() {
   };
 
   return (
-    <div className="container">
-      <Search onSearchChange={handleOnSearchChange} userId={userId}/>
-      {currentWeather && <CurrentWeather data={currentWeather}/>}
-      {forecastWeather && <Forecast data={forecastWeather}/>}
-    </div>
+    <Router>
+      <div className="container">
+        <Switch>
+          <Route path="/" exact>
+            <Search onSearchChange={handleOnSearchChange} userId={user ? user.uid : null}/>
+            {currentWeather && <CurrentWeather data={currentWeather} userId={user ? user.uid : null}/>}
+            {forecastWeather && <Forecast data={forecastWeather}/>}
+          </Route>
+          <Route path="/login">
+            <LoginPage />
+          </Route>
+          <Route path="/signup">
+            <SignupPage />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

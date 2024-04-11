@@ -1,3 +1,25 @@
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.search-bar {
+    flex-grow: 1;
+}
+
+.login-button {
+    margin-left: 55px;
+    margin-right: -50px;
+    cursor: pointer;
+}
+
+.logout-button {
+    margin-left: 75px;
+    margin-right: -175px;
+    cursor: pointer;
+}
+
 .favorite-locations {
     font-size: 36px;
     font-weight: 700;

@@ -7,10 +7,8 @@ import { db } from "../../config/firebase-config";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
 
-const CurrentWeather = ({ data }) => {
+const CurrentWeather = ({ data, userId }) => {
     const [isFavorite, setIsFavorite] = useState(false);
-    const mockUserId = 'Sndjs24hb3FH2kk33'
-    const [userId, setUserId] = useState(mockUserId);
     const [locationId, setLocationId] = useState('');
 
     useEffect(() => {

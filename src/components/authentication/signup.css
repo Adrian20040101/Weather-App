@@ -1,0 +1,22 @@
+.paper-style {
+    padding: 50px 20px;
+    width: 400px;
+    margin: 20px auto;
+  }
+  
+  .form {
+    & > :not(style) {
+      margin: 10px 0;
+    }
+  }
+  
+  .submit-button {
+    width: 100%;
+  }
+  
+  .sign-up-redirect {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: -40px;
+  }
+  
