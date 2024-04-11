@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button, InputAdornment, IconButton, Divider } from '@mui/material';
@@ -16,6 +16,7 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loginMessage, setLoginMessage] = useState('');
+    const history = useHistory();
 
     const togglePasswordVisibility = () => {
         setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -40,6 +41,7 @@ export default function LoginPage() {
         try {
             const provider = new GoogleAuthProvider();
             await signInWithPopup(auth, provider);
+            history.push('/');
         } catch (error) {
             console.error('Error signing in with Google:', error);
         }
@@ -97,11 +99,11 @@ export default function LoginPage() {
                     <div className="google-button">
                         <GoogleIcon onClick={handleGoogleSignIn}/>
                     </div>
-                    {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>} {/* Display error message */}
+                    {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
                     {!error && loginMessage && <p style={{ color: 'green', textAlign: 'center' }}>{loginMessage}</p>}
                     
                 </Box>
-                <p className='sign-up-redirect'>Don't have an account? <Link to="/signup">Register now</Link></p>
+                <p style={{ textAlign: 'center', marginTop: '30px', marginBottom: '-100px' }}>Don't have an account? <Link to="/signup">Register now</Link></p>
                 </Box>
             </div>
         </div>

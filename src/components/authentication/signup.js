@@ -49,8 +49,8 @@ export default function SignupPage() {
   };
 
   return (
-    <Container style={{ display: 'flex', justifyContent: 'center', minHeight: '100vh', alignItems: 'center' }}>
-      <Paper elevation={3} className="paper-style">
+    <div className="container">
+      <div className="paper-style">
         <Box sx={{ mb: 2 }}>
           <h1 style={{ color: 'black', textAlign: 'center' }}>
             <b>Sign Up</b>
@@ -106,8 +106,8 @@ export default function SignupPage() {
         </Box>
         {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
         {!error && signupMessage && <p style={{ color: 'green', textAlign: 'center' }}>{signupMessage}</p>}
-        <p className="sign-up-redirect">Already have an account? <Link to="/login">Login</Link></p>
-      </Paper>
-    </Container>
+        <p className="login-redirect">Already have an account? <Link to="/login">Login</Link></p>
+      </div>
+    </div>
   );
 }

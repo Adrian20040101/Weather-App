@@ -23,10 +23,6 @@
     margin-top: 20px;
 }
 
-.divider {
-    margin: 20px 0;
-}
-
 .or-text {
     margin: 15px 10px;
     margin-bottom: 20px;
@@ -38,7 +34,7 @@
     border-radius: 20px;    
     padding: 10px; 
     cursor: pointer;
-    margin: 10px 170px auto;
+    margin: 10px 170px 30px;
 }
 
 .google-button:hover {
@@ -70,5 +66,5 @@
 .sign-up-redirect {
     text-align: center;
     margin-top: 30px;
-    margin-bottom: -50px;
+    margin-bottom: -100px;
 }
