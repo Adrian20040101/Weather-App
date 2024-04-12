@@ -63,8 +63,14 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/a
 
 ### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+This project was bootstrapped with Create React App and is ready to be deployed.
 
-### `npm run build` fails to minify
+To deploy the app, you can follow these steps:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Build the app for production using the command:
+
+### `npm run build` 
+
+2. Once the build is complete, you can deploy the app to your preferred hosting platform.
+
+The app is now ready to be deployed! You can view the deployed version: https://weather-app-70eae.firebaseapp.com.
